@@ -252,6 +252,7 @@
       .oldPrice {
         font-size: 40px;
         font-weight: 600;
+        text-decoration: line-through;
 
         @media (max-width: 700px) {
           font-size: 32px;
