@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import './style/style.scss'
 import Data from "../../../src/data/product.json";
 import nov from '../../assets/icons8-новинка-48.png';
@@ -8,6 +9,40 @@ import arrow from '../../assets/icons8-процент-64.png';
 
 function Product() {
     const productInfo = Data;
+    const hours = 14;
+    const minutes = 55;
+    const seconds = 15;
+    const initialTime = hours * 3600 + minutes * 60 + seconds;
+
+    const [time, setTime] = useState(initialTime);
+    const [currentTime, setCurrentTime] = useState({
+        h: String(hours).padStart(2, "0"),
+        m: String(minutes).padStart(2, "0"),
+        s: String(seconds).padStart(2, "0")
+    });
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setTime((prevTime) => {
+                let newTime = prevTime - 1;
+                if (newTime < 0) {
+                    newTime = initialTime;
+                }
+                formatTime(newTime);
+                return newTime;
+            });
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, []);
+
+    const formatTime = (time) => {
+        const h = String(Math.floor(time / 3600)).padStart(2, "0");
+        const m = String(Math.floor((time % 3600) / 60)).padStart(2, "0");
+        const s = String(time % 60).padStart(2, "0");
+
+        setCurrentTime({ h, m, s }); // Обновляем текущее время
+    };
 
     return (
         <>
@@ -62,15 +97,15 @@ function Product() {
                 <div className='order-wrapp'>
                     <div className='time-wrapp'>
                         <div className='time-item'>
-                            <p className='top-time'>14</p>
+                            <p className='top-time'>{currentTime.h}</p>
                             <p>годин</p>
                         </div>
                         <div className='time-item'>
-                            <p className='top-time'>55</p>
+                            <p className='top-time'>{currentTime.m}</p>
                             <p>хвилин</p>
                         </div>
                         <div className='time-item'>
-                            <p className='top-time'>15</p>
+                            <p className='top-time'>{currentTime.s}</p>
                             <p>секунд</p>
                         </div>
                     </div>
